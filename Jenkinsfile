@@ -71,6 +71,10 @@ spec:
             echo sh(script: 'env | sort', returnStdout: true)
         }
 
+        stage('Prerequisites') {
+            prerequisites 'Palisade-common'
+        }
+
         stage('Install') {
             install 'Palisade-readers'
         }
