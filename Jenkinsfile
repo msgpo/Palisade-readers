@@ -72,7 +72,7 @@ spec:
         }
 
         stage('Install') {
-            install 'Palisade-common'
+            install 'Palisade-readers'
         }
     }
 }
