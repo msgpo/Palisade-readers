@@ -61,7 +61,7 @@ spec:
 
     node(POD_LABEL) {
         def GIT_BRANCH_NAME
-        
+
         stage('Bootstrap') {
             if (env.CHANGE_BRANCH) {
                 GIT_BRANCH_NAME = env.CHANGE_BRANCH
@@ -74,4 +74,5 @@ spec:
         stage('Install') {
             install 'Palisade-common'
         }
+    }
 }
