@@ -75,6 +75,14 @@ spec:
             install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
         }
 
+        stage('SonarQube Analysis') {
+            sqAnalysis('Palisade-readers')
+        }
+
+        stage("SonarQube Quality Gate") {
+            sqQualityGate()
+        }
+
         stage('Maven deploy') {
             deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
         }
