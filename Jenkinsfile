@@ -63,7 +63,7 @@ spec:
         def GIT_BRANCH_NAME
 
         stage('Bootstrap') {
-            bootstrap(GIT_BRANCH_NAME)
+            GIT_BRANCH_NAME = bootstrap(GIT_BRANCH_NAME)
         }
 
         stage('Prerequisites') {
