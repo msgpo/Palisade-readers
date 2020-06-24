@@ -63,12 +63,7 @@ spec:
         def GIT_BRANCH_NAME
 
         stage('Bootstrap') {
-            if (env.CHANGE_BRANCH) {
-                GIT_BRANCH_NAME = env.CHANGE_BRANCH
-            } else {
-                GIT_BRANCH_NAME = env.BRANCH_NAME
-            }
-            echo sh(script: 'env | sort', returnStdout: true)
+            bootstrap(GIT_BRANCH_NAME)
         }
 
         stage('Prerequisites') {
