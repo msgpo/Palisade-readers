@@ -72,14 +72,33 @@ spec:
         }
 
         stage('Prerequisites') {
-            prerequisites 'Palisade-common'
+            dir('Palisade-common') {
+                prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
+            }
+        }
+        stage('Install, Unit Tests, Checkstyle') {
+            dir('Palisade-readers') {
+                git url: 'https://github.com/gchq/Palisade-readers.git'
+                sh "git checkout ${GIT_BRANCH_NAME}"
+                container('docker-cmds') {
+                    configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                        sh 'mvn -s $MAVEN_SETTINGS install'
+                    }
+                }
+            }
         }
 
-        stage('Install') {
-            install 'Palisade-readers'
-            container('docker-cmds') {
-                configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                    sh 'mvn -s $MAVEN_SETTINGS install'
+        stage('Maven deploy') {
+            dir('Palisade-readers') {
+                container('docker-cmds') {
+                    configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                        if (("${env.BRANCH_NAME}" == "develop") ||
+                                ("${env.BRANCH_NAME}" == "master")) {
+                            sh 'mvn -s $MAVEN_SETTINGS deploy -P quick'
+                        } else {
+                            sh "echo - no deploy"
+                        }
+                    }
                 }
             }
         }
