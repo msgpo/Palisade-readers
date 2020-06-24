@@ -71,12 +71,16 @@ spec:
             echo sh(script: 'env | sort', returnStdout: true)
         }
 
-        /* stage('Prerequisites') {
-            prerequisites 'Palisade-common'
-        } */
+        stage('Prerequisites') {
+            withMaven(maven: 'Maven 3') {
+                prerequisites 'Palisade-common'
+            }
+        }
 
         stage('Install') {
-            install 'Palisade-readers'
+            withMaven(maven: 'Maven 3') {
+                install 'Palisade-readers'
+            }
         }
     }
 }
