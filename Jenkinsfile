@@ -18,28 +18,65 @@
 //node 0 is used for the Jenkins master
 @Library('shared-library')_
 
-node() {
-    podTemplate(yaml: readFile('template.yaml')) {
+podTemplate(yaml: '''
+apiVersion: v1
+kind: Pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: palisade-node-name
+            operator: In
+            values:
+            - node1
+            - node2
+            - node3
+  containers:
+  - name: jnlp
+    image: jenkins/jnlp-slave
+    imagePullPolicy: Always
+    args:
+    - $(JENKINS_SECRET)
+    - $(JENKINS_NAME)
+    resources:
+      requests:
+        ephemeral-storage: "4Gi"
+      limits:
+        ephemeral-storage: "8Gi"
 
-        node(POD_LABEL) {
-            def GIT_BRANCH_NAME
+  - name: docker-cmds
+    image: 779921734503.dkr.ecr.eu-west-1.amazonaws.com/jnlp-did:200608
+    imagePullPolicy: IfNotPresent
+    command:
+    - sleep
+    args:
+    - 99d
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
+''') {
 
-            stage('Bootstrap') {
-                GIT_BRANCH_NAME = bootstrap(GIT_BRANCH_NAME)
-            }
+    node(POD_LABEL) {
+        def GIT_BRANCH_NAME
 
-            stage('Prerequisites') {
-                prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
-                prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
-            }
+        stage('Bootstrap') {
+            GIT_BRANCH_NAME = bootstrap(GIT_BRANCH_NAME)
+        }
 
-            stage('Install, Unit Tests, Checkstyle') {
-                install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
-            }
+        stage('Prerequisites') {
+            prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
+            prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
+        }
 
-            stage('Maven deploy') {
-                deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
-            }
+        stage('Install, Unit Tests, Checkstyle') {
+            install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
+        }
+
+        stage('Maven deploy') {
+            deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
         }
     }
 }
