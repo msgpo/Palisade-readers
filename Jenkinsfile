@@ -18,7 +18,7 @@
 //node 0 is used for the Jenkins master
 @Library('shared-library')_
 
-podTemplate(yaml: readFile('template.yaml') {
+podTemplate(yaml: readFile('template.yaml')) {
 
     node(POD_LABEL) {
         def GIT_BRANCH_NAME
