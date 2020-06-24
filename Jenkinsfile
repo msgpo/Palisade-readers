@@ -73,7 +73,7 @@ spec:
 
         stage('Prerequisites') {
             dir('Palisade-common') {
-                prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
+                prerequisites(repo: 'Palisade-common', branch: 'develop')
             }
         }
         stage('Install, Unit Tests, Checkstyle') {
