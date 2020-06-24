@@ -74,12 +74,14 @@ spec:
         stage('Prerequisites') {
             withMaven(maven: 'Maven 3') {
                 prerequisites 'Palisade-common'
+                sh 'mvn install -P quick'
             }
         }
 
         stage('Install') {
             withMaven(maven: 'Maven 3') {
                 install 'Palisade-readers'
+                sh 'mvn install'
             }
         }
     }
