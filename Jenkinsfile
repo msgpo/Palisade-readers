@@ -18,26 +18,28 @@
 //node 0 is used for the Jenkins master
 @Library('shared-library')_
 
-podTemplate(yaml: readFile('template.yaml')) {
+node() {
+    podTemplate(yaml: readFile('template.yaml')) {
 
-    node(POD_LABEL) {
-        def GIT_BRANCH_NAME
+        node(POD_LABEL) {
+            def GIT_BRANCH_NAME
 
-        stage('Bootstrap') {
-            GIT_BRANCH_NAME = bootstrap(GIT_BRANCH_NAME)
-        }
+            stage('Bootstrap') {
+                GIT_BRANCH_NAME = bootstrap(GIT_BRANCH_NAME)
+            }
 
-        stage('Prerequisites') {
-            prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
-            prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
-        }
+            stage('Prerequisites') {
+                prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
+                prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
+            }
 
-        stage('Install, Unit Tests, Checkstyle') {
-            install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
-        }
+            stage('Install, Unit Tests, Checkstyle') {
+                install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
+            }
 
-        stage('Maven deploy') {
-            deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
+            stage('Maven deploy') {
+                deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
+            }
         }
     }
 }
