@@ -73,12 +73,16 @@ spec:
 
         stage('Prerequisites') {
             prerequisites 'Palisade-common'
-            sh 'mvn install -P quick'
+            configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                sh 'mvn -s $MAVEN_SETTINGS install -P quick'
+            }
         }
 
         stage('Install') {
             install 'Palisade-readers'
-            sh 'mvn install'
+            configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                sh 'mvn -s $MAVEN_SETTINGS install'
+            }
         }
     }
 }
