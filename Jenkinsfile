@@ -72,10 +72,8 @@ spec:
         }
 
         stage('Prerequisites') {
-            dir('Palisade-common') {
-                prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
-                prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
-            }
+            prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
+            prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
         }
         stage('Install, Unit Tests, Checkstyle') {
             dir('Palisade-readers') {
