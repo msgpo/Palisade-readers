@@ -73,15 +73,19 @@ spec:
 
         stage('Prerequisites') {
             prerequisites 'Palisade-common'
-            configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                sh 'mvn -s $MAVEN_SETTINGS install -P quick'
+            container('docker-cmds') {
+                configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                    sh 'mvn -s $MAVEN_SETTINGS install -P quick'
+                }
             }
         }
 
         stage('Install') {
             install 'Palisade-readers'
-            configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                sh 'mvn -s $MAVEN_SETTINGS install'
+            container('docker-cmds') {
+                configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
+                    sh 'mvn -s $MAVEN_SETTINGS install'
+                }
             }
         }
     }
