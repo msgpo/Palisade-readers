@@ -70,25 +70,13 @@ spec:
             prerequisites(repo: 'Palisade-common', branch: GIT_BRANCH_NAME)
             prerequisites(repo: 'Palisade-clients', branch: GIT_BRANCH_NAME)
         }
+
         stage('Install, Unit Tests, Checkstyle') {
-            dir('Palisade-readers') {
-                install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
-            }
+            install(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
         }
 
         stage('Maven deploy') {
-            dir('Palisade-readers') {
-                container('docker-cmds') {
-                    configFileProvider([configFile(fileId: "${env.CONFIG_FILE}", variable: 'MAVEN_SETTINGS')]) {
-                        if (("${env.BRANCH_NAME}" == "develop") ||
-                                ("${env.BRANCH_NAME}" == "master")) {
-                            sh 'mvn -s $MAVEN_SETTINGS deploy -P quick'
-                        } else {
-                            sh "echo - no deploy"
-                        }
-                    }
-                }
-            }
+            deploy(repo: 'Palisade-readers', branch: GIT_BRANCH_NAME)
         }
     }
 }
