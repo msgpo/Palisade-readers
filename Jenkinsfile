@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//node-affinity
-//nodes 1..3 are reserved for Jenkins slave pods.
-//node 0 is used for the Jenkins master
 @Library('shared-library')_
 
 node() {
     def GIT_BRANCH_NAME
 
-    buildReaders(GIT_BRANCH_NAME)
+    readers(GIT_BRANCH_NAME)
 }
