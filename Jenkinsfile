@@ -18,5 +18,5 @@
 node() {
     def GIT_BRANCH_NAME
 
-    readers([GIT_BRANCH_NAME, 'Palisade-readers', 'Palisade-common'])
+    readers([GIT_BRANCH_NAME, 'Palisade-common'])
 }
